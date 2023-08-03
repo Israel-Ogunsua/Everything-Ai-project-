@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title%}
+    Archive  
+{% endblock %}
+
+{% block content%}
+
+
+    <div>
+      <table>
+        <tr>
+          <th> <i class="fa fa-info-circle" aria-hidden="true"></i> Title</th>
+          <th> <i class="fa fa-exclamation" aria-hidden="true"></i> Discription </th>
+          <th><i class="fa fa-trash-o" aria-hidden="true"></i> Delete  </th>
+        </tr>
+        {% for i in context %}
+        <tr>
+          
+          <td> {{i.title}}</td>
+          <td> {{i.discription}}</td> 
+          <td> 
+            <form action="{{ url_for('deletearchive')}}" method="post">
+              <input type="text" name = 'delete' id  = 'delete' value={{i.id}} style="display:none;">
+              <button type = 'submit'><a href="{{ url_for('deletearchive')}}"> <i class="fa fa-trash-o" aria-hidden="true" style="color: red; font-size: 19px;border: 1px solid #dddddd; text-align: left;
+                padding: 8px;"></i></a> </button>
+            </form></td>
+          
+        </tr>
+        {% endfor %}
+
+     </table>
+    </div>
+
+    <style>
+        table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
+
+        td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        }
+
+        tr:nth-child(even) {
+        background-color: #dddddd;
+        }
+    </style>
+
+
+{% endblock %}

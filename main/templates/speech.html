@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block title%}
+    Ai speech
+{% endblock %}
+
+{% block content%}
+    <h3> AI Voice Assistant</h3>
+    <br>
+    <div style="padding-left: 35%;">
+        <div class="container mt-5">
+            <!-- Form with the POST method -->
+            <form  method="post">
+                <!-- Button element as the mic icon -->
+                <button type="submit" class="mic-button btn btn-success" >
+                    <!-- Bootstrap mic icon -->
+                    click to ask Ai <i class="bi bi-mic"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <br>
+    {% if action %}
+        <div class="disi">
+            <h5 style="font-weight: bold;">You </h5>
+            <p >{{ action }}</p>
+        </div>
+
+        {% if information %}
+            <div class="response">
+                <h5 style=" font-weight: bold;">Everything Ai </h5>
+                <p>{{information}}</p>
+            </div>
+        
+        {% endif %}
+        
+    {% endif %}
+
+    
+
+
+    <style>
+    /* Custom CSS to style the mic button */
+    body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+
+    }
+
+    .mic-container {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.1s;
+    }
+
+
+
+     .disi{
+        background: #e0f6d5;
+        padding: 10px 20px;
+        border: 1px solid #dddddd;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+
+    .response{
+        background: #a3b5f0;
+        padding: 10px 20px;
+        border: 1px solid #dddddd;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+
+    .p{
+        color: black;
+        font-family:Georgia, 'Times New Roman', Times, serif;
+    }
+    </style>
+
+
+<script>
+    document.getElementById('mic').addEventListener('click', function () {
+  const micIcon = this;
+  micIcon.style.transform = 'scale(1.2)'; // Scale up the icon on click
+  setTimeout(() => {
+    micIcon.style.transform = 'scale(1)'; // Reset the icon scale after a short delay
+  }, 100);
+});
+
+</script>
+        
+{% endblock %}

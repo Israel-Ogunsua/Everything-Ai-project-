@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title%}
+    Login
+{% endblock %}
+
+{% block content%}
+    <div class="form_tab">
+        <div class="heder">
+            <center><h1> Login </h1></center>
+            <hr>
+            <br>
+            <br>
+        </div>
+        <form action="" method="post">
+        <center>
+            <label>Username : </label>   
+            <input type="text" placeholder="Enter Username" name="username" id = 'username' required> <br> <br>
+            <label>Password : </label>   
+            <input type="password" placeholder="Enter Password" name="password" id = 'password' required>  <br> <br>
+            <button type="submit">Login</button>  <br> <br>    
+            Don't have an account? <a href="#"> Register Here </a> 
+        </center>  
+        </form>
+
+    </div>
+
+    <style>
+        .form_tab{
+            border:black 1px solid;
+            padding:25px 35px;
+            margin:45px 30px;
+            border-radius: 30px;
+            background-color:rgb(189, 178, 199);
+        }
+        button{
+            color:white;
+            border-radius: 30px;
+            background-color:green;
+            width: 70%;
+        }
+        input{
+            width: 50%;
+        }
+    </style>
+
+    
+{% endblock %}
