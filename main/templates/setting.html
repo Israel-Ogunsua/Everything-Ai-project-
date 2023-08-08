@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title%}
+    setting
+{% endblock %}
+
+{% block content%}
+    <h1> Setting Update</h1> 
+    <div class="account-form">
+        <form id="account-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="profile-image">Profile Image:</label>
+            <input type="file" id="profile-image" name="profile-image" accept="image/*">
+            
+            <button type="submit">Update Account</button>
+        </form>
+    </div>
+
+
+    <style>
+
+
+        .account-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+
+    
+    
+{% endblock %}

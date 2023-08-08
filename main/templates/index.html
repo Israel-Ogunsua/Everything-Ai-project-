@@ -8,7 +8,7 @@
 <br>
 
 <div class="container">
-  <h2>Voice activation </h2>
+  <h2>Writing activation </h2>
   <p>Click on the button to toggle between showing and hiding content.</p>
   <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Learn How  to use </button>
   <div id="demo" class="collapse">
@@ -35,7 +35,7 @@
   
         
           <li class="message received">
-            <div class="message-text">
+            <div class="message-text" style="background-color: #6bf594;">
               <div class="message-sender">
                 <b>AI Response</b>
               </div>
@@ -66,8 +66,8 @@
         {% if response %}
 
         <li>
-          <div class="message-text">
-            <div class="message-sender">
+          <div class="message-text" style="background-color: #6bf594;">
+            <div class="message-sender" style="color: white;">
               <b>AI</b>
             </div>
             <div class="message-content">
@@ -91,67 +91,18 @@
     <br>
     <form class="message" method="post">
       <div class="input-group">
+       
+
         <input type="text" class="form-control message-input" name="message" id = 'message' placeholder="Type your message...">
         <div class="input-group-append">
           <button type="submit" class="btn btn-primary btn-send">Send</button>
         </div>
       </div>
+     
     </form>
 
-  
- 
-
 </div>
 </div>
-
-
-
-
-{% if current_user.is_authenticated %}
-  <table>
-    <tr>
-      <th><i class="fa fa-trash-o" aria-hidden="true"></i> Delete  </th>
-      <th> <i class="fa fa-info-circle" aria-hidden="true"></i> Title</th>
-      <th> <i class="fa fa-exclamation" aria-hidden="true"></i> Discription </th>
-      <th><i class="fa fa-star-half-o" aria-hidden="true"></i> Level</th>
-      <th><i class="fa fa-times" aria-hidden="true"></i> Due time</th>
-      <th> <i class="fa fa-archive" aria-hidden="true"></i> Achive</th>
-      
-    </tr>
-
-    {% for todo in context %} 
-        {% if todo %}
-          {% for tod in todo %} 
-            <tr>
-              <br>
-              <td> 
-                <form action="{{ url_for('delete')}}" method="post">
-                  <input type="text" name = 'delete' id  = 'delete' value={{tod.id}} style="display:none;">
-                  <button type = 'submit'><a href="{{ url_for('delete')}}"> <i class="fa fa-trash-o" aria-hidden="true" style="color: red; font-size: 19px;border: 1px solid #dddddd; text-align: left;
-                    padding: 8px;"></i></a> </button>
-                </form></td>
-              <td>{{tod.title}}</td>
-              <td>{{tod.discription}}</td>
-              <td>{{tod.status}}</td>
-              <td>{{tod.Duetime}}</td>
-              <td> 
-                <form action="{{ url_for('achive')}}" method="post">
-                  <input type="text" name = 'delete' id  = 'delete' value={{tod.id}} style="display:none;">
-                  <input type="text" name = 'add' id  = 'add' value={{tod.title}} style="display:none;">
-                  <input type="text" name = 'add_discription' id  = 'add_discription' value={{tod.discription}} style="display:none;">
-                  <button type = 'submit'><a href="{{ url_for('achive')}}"><i class="fa fa-check" aria-hidden="true" style="background-color: rgb(163, 189, 163); border-radius:7px; font-size: 19px; border: 1px solid #dddddd; text-align: left;
-                    padding: 8px;"></i></a>
-                    </button>
-                </form></td>
-              
-            </tr>
-          {% endfor%}
-        {%else%}
-          <center><h6> Nothing on your search List!! </h6></center>
-        {%endif%}
-    {% endfor%}
-  </table>
-  {% endif %}
 
   <br>
  

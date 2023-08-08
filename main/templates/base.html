@@ -16,39 +16,45 @@
 </head>
 
 <body>
-    <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-          <div class="container">
-            <a class="navbar-brand mr-4" href="#">Everything AI </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+  <header class="site-header">
+    <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+            <a class="navbar-brand mr-4" href="{{ url_for('index')}}">
+                <img src="default.jpg" alt="Everything AI Logo" width="40" height="40">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+                aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarToggle">
-              <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="{{ url_for('index')}}">Home</a>
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link" href="{{ url_for('index')}}">Home</a>
                     <a class="nav-item nav-link" href="{{ url_for('about')}}">About</a>
+                    {% if current_user.is_authenticated %}
                     <a class="nav-item nav-link" href="{{ url_for('speech')}}">Voice</a>
-              </div>
-              <!-- Navbar Right Side -->
-              <div class="navbar-nav">
-                <form class="d-flex" style= 'margin-right: 10px;'> 
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> 
-                    <button class="btn btn-outline-success" type="submit">Search</button> 
-                </form>
-                {% if current_user.is_authenticated %}
+                    {% endif %}
+                </div>
+                <!-- Navbar Right Side -->
+                <div class="navbar-nav">
+                    <form class="d-flex" style='margin-right: 10px;'>
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                    {% if current_user.is_authenticated %}
+                    <a class="nav-item nav-link" href="{{ url_for('setting')}}">Setting</a>
+                    <a class="nav-item nav-link" href="{{ url_for('account')}}">Account</a>
+                    <a class="nav-item nav-link" href="{{ url_for('logout')}}">Logout</a>
 
-                  <a class="nav-item nav-link" href="{{ url_for('account')}}">Account</a>
-                  <a class="nav-item nav-link" href="{{ url_for('logout')}}">Logout</a>
-                  
-                {% else %}
-                  <a class="nav-item nav-link" href="{{ url_for('login')}}">Login</a>
-                  <a class="nav-item nav-link" href="{{ url_for('register')}}">Register</a>
-                {% endif %}
-              </div>
+                    {% else %}
+                    <a class="nav-item nav-link" href="{{ url_for('login')}}">Login</a>
+                    <a class="nav-item nav-link" href="{{ url_for('register')}}">Register</a>
+                    {% endif %}
+                </div>
             </div>
-          </div>
-        </nav>
-      </header>
+        </div>
+    </nav>
+  </header>
+
     
 
       <main role="main" class="container">
@@ -182,10 +188,8 @@
                           </center>
                           <br/><div style="clear:both"></div>  
                   </li>
-                  <li class="list-group-item list-group-item-light"> <i class="fa fa-times-circle-o" aria-hidden="true"></i> Due Next </li>
-                  <li class="list-group-item list-group-item-light"> <i class="fa fa-archive" aria-hidden="true"></i> Archived  </li>
                   <br>
-                  <button class="btn btn-outline-success" type="submit" value= 'View Archive'> <a class="nav-item nav-link" href="{{ url_for('achive')}}"> View Archive</a></button>
+                  <button class="btn btn-outline-success" type="submit" value= 'View Archive'> <a class="nav-item nav-link" href="{{ url_for('achive')}}"> View All Recent Seacrhes </a></button>
                 </ul>
               </p>
             </div>
