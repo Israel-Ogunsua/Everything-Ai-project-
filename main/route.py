@@ -8,8 +8,6 @@ import pywhatkit
 import datetime
 import wikipedia
 import pyttsx3
-running = True
-
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/home', methods=['GET', 'POST'])
@@ -25,11 +23,12 @@ def index():
             description = message.strip()
             response = wikipedia.summary(description, sentences=2)
             
-            # Create a new ChatPost object
-            ContentSearched = ChatPost(content_me=message, content_ai=response, user_id=current_user.id)
-            db.session.add(ContentSearched)
-            db.session.commit()  # Commit the changes to the database
-            
+            if current_user.is_authenticated: 
+                # Create a new ChatPost object
+                ContentSearched = ChatPost(content_me=message, content_ai=response, user_id=current_user.get_id())
+                db.session.add(ContentSearched)
+                db.session.commit()  # Commit the changes to the database
+                
             return render_template('index.html', message=message, response=response)
         except wikipedia.exceptions.DisambiguationError as e:
             # Handle the case when Wikipedia is unable to resolve the search term
@@ -58,20 +57,22 @@ def process_audio():
     engine.setProperty("voice", voices[1].id)
 
     with sr.Microphone() as source:
-        print("Listening...")
         recognizer.adjust_for_ambient_noise(source, duration = 0.2)
         audio = recognizer.listen(source)
 
     try:
         # Perform speech recognition
         action = recognizer.recognize_google(audio)
-        print("You said:", action)
         return action
     except sr.UnknownValueError:
         return "Hello there, I couldn't understand what you said. Please try again."
     except sr.RequestError as e:
-        print("Error occurred during recognition. Check your internet connection or API key:", e)
         return None
+
+@login_required
+@app.route('/face')
+def face():
+    return render_template('face.html')
 
 @login_required
 @app.route('/voice', methods=['GET', 'POST'])
@@ -187,7 +188,9 @@ def login():
 @login_required
 @app.route('/account')
 def account():
-    return render_template('account.html')
+    user = User.query.filter_by(id = current_user.get_id()).first()
+    
+    return render_template('account.html', username = user.username, email = user.email)
 
 
 @login_required
@@ -218,7 +221,9 @@ def deletearchive():
 @app.route("/achive", methods=['GET', 'POST'])
 def achive():
     data = []
-    archived_data = ChatPost.query.all()
+    user_id = current_user.get_id()
+    # Query archived data from the database using SQLAlchemy where id matches the user's ID
+    archived_data = ChatPost.query.filter_by(id=user_id).all()
     for make in archived_data:
         data.append(make)
     

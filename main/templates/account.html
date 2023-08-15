@@ -7,7 +7,15 @@
      <div class="account-container">
         <h2>Account Information</h2>
         <div id="account-details">
-            <!-- User information will be displayed here -->
+            
+            {% if username %}
+                <!-- User information will be displayed here -->
+                <br>
+                <h4> UserName : {{ username }}</h4>
+                <h4> Email: {{ email }}</h4>
+               
+            
+            {% endif %}
         </div>
     </div>
 
@@ -17,7 +25,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
+            max-width: 100%;
             width: 100%;
         }
 
