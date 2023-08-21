@@ -16,7 +16,8 @@ class User(db.Model,  UserMixin):
     chat = db.relationship('ChatPost', backref='author', lazy=True)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.password}')"
+        return f"User('{self.username}', '{self.email}', '{self.password}', {self.id})"
+    
 
 class ChatPost(db.Model,  UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,3 +29,7 @@ class ChatPost(db.Model,  UserMixin):
 
     def __repr__(self):
         return f"ChatPost('{self.title}', {self.content_me}', '{self.content_ai}', '{self.user_id}')"
+    
+    def __init__(self, user_id):
+        self.id = user_id
+       

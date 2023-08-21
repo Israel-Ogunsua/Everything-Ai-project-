@@ -1,5 +1,5 @@
 from app import app, bcrypt, db
-from flask import render_template,url_for,request,flash, redirect,  jsonify
+from flask import render_template,url_for,request,flash, redirect,  jsonify, Response
 from flask_login import login_user, login_required,current_user, logout_user
 from  models import  User, ChatPost
 # for  voice acitvation 
@@ -8,6 +8,14 @@ import pywhatkit
 import datetime
 import wikipedia
 import pyttsx3
+import cv2
+from ConstructFace import ConstructFace
+import numpy as np
+
+sfr = ConstructFace()
+sfr.load_encoding_images("images/")
+# Load Camera
+cap = cv2.VideoCapture(0) 
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/home', methods=['GET', 'POST'])
@@ -22,13 +30,19 @@ def index():
             # Ensure the input is not empty before proceeding with Wikipedia search
             description = message.strip()
             response = wikipedia.summary(description, sentences=2)
-            
-            if current_user.is_authenticated: 
-                # Create a new ChatPost object
-                ContentSearched = ChatPost(content_me=message, content_ai=response, user_id=current_user.get_id())
-                db.session.add(ContentSearched)
-                db.session.commit()  # Commit the changes to the database
+
+            if current_user.is_authenticated:
+                print(response)
                 
+                # Check if the user is authenticated before accessing attributes/methods
+                if hasattr(current_user, 'get_id') and callable(getattr(current_user, 'get_id')):
+                    user_id = current_user.get_id()
+                    
+                    # Create a new ChatPost object
+                    content_searched = ChatPost(content_me=message, content_ai=response, user_id=user_id)
+                    db.session.add(content_searched)
+                    db.session.commit()
+
             return render_template('index.html', message=message, response=response)
         except wikipedia.exceptions.DisambiguationError as e:
             # Handle the case when Wikipedia is unable to resolve the search term
@@ -69,10 +83,31 @@ def process_audio():
     except sr.RequestError as e:
         return None
 
+def generate_frames():
+    while True:
+        ret, frame = cap.read()
+
+        # Detect Faces
+        face_locations, face_names = sfr.detect_known_faces(frame)
+        for face_loc, name in zip(face_locations, face_names):
+            y1, x2, y2, x1 = face_loc[0], face_loc[1], face_loc[2], face_loc[3]
+
+            cv2.putText(frame, name, (x1, y1 - 10), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 200), 2)
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 200), 4)
+
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
 @login_required
 @app.route('/face')
 def face():
     return render_template('face.html')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @login_required
 @app.route('/voice', methods=['GET', 'POST'])
@@ -152,6 +187,7 @@ def speech():
        
     return render_template('speech.html', action=action, information=information)  # Pass 'action' variable to the template
 
+
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -211,7 +247,6 @@ def deletearchive():
 
     if request.method == 'POST':
         action = request.form['delete']
-
         deleted_archive = ChatPost.query.filter_by(id = action).first()
         db.session.delete(deleted_archive)
         db.session.commit()
@@ -226,6 +261,7 @@ def achive():
     archived_data = ChatPost.query.filter_by(id=user_id).all()
     for make in archived_data:
         data.append(make)
+    
     
     return render_template("archive.html", post = data)
     

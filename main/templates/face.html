@@ -1,18 +1,75 @@
 {% extends 'base.html' %}
 {% block title%}
-    About us  
+    Face Dectection 
 {% endblock %}
 
 {% block content%}
-    <!-- Band Description -->
-    <section class="w3-container w3-center w3-content" style="max-width:600px">
-    <h2 class="w3-wide">Everthing Ai project </h2>
-    <p class="w3-opacity"><i>We all Love Ai </i></p>
-    
+<div class="container">
+    <h2>Facial Recoginition  </h2>
+    <p>Click on the button to toggle between showing and hiding content.</p>
+    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Learn How  to use </button>
+    <div id="demo" class="collapse">
+      <br>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </div>
 
-    </section>
+    <br>
+    <br>
 
+    <h2>Image Submission</h2>
+    <form  method="post" enctype="multipart/form-data">
+        <label for="image">Upload an image:</label>
+        <input type="file" name="image" id="image" accept="image/*" required>
+        <br>
+        <label for="image">Add details :</label>
+        <input type="tect " placeholder="Name Suggested ">
+        
+        <input type="submit" value="Submit"  class="btn btn-info" >
+        
+    </form>
+    <br>
 
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <img id="video_feed" src="{{ url_for('video_feed') }}" width="70%" height="70%">
+        </div>
+    </div>
+
+    <br>
+
+    <div>
+        <table>
+        <tr>
+            <th> <i class="fa fa-user" aria-hidden="true"></i> Person </th>
+            <th> <i class="fa fa-address-book-o" aria-hidden="true"></i> In record </th>
+            <th> <i class="fa fa-info-circle" aria-hidden="true"></i> Name</th>
+            <th> <i class="fa fa-level-up" aria-hidden="true"></i> Level </th>
+            
+    </table>
+    </div>
+</div>
+<br>
+<br>
+
+<style>
+    table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    }
+
+    tr:nth-child(even) {
+    background-color: #dddddd;
+    }
+</style>
 
     
 {% endblock %}
