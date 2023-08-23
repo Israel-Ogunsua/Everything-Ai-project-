@@ -19,38 +19,30 @@ sfr.load_encoding_images(Image)
 cap = cv2.VideoCapture(0) 
 facing = []
 
-def savedate(message, response, user_id):
-    print("process 1")
-    print(type(response))
-
-    content_searched = ChatPost( content_ai=response, user_id=user_id)
-    db.session.add(content_searched)
-    db.session.commit()
-           
-  
+            
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/home', methods=['GET', 'POST'])
 def index(): 
+    message= ""
+    response = ""
+
     if request.method == 'POST':
         message = request.form.get('message')
         if not message:
             error_message = "Please enter a message."
             return render_template('index.html', error_message=error_message)
         
-        print("gibe")
         try:
             description = message.strip()
             response = wikipedia.summary(description, sentences=2)
-            print(response)
+
             if current_user.is_authenticated:
                 if hasattr(current_user, 'get_id') and callable(getattr(current_user, 'get_id')):
                     user_id = current_user.get_id()
-                    print("seen")
-                    
-                savedate(message, response, user_id)
-                print("yeah")
-            return render_template('index.html', message=message, response=response)
-    
+                content= ChatPost( content_me= message, content_ai=response, user_id=user_id)
+                db.session.add(content)
+                db.session.commit()                        
+            pass
         except wikipedia.exceptions.DisambiguationError as e:
             # Handle the case when Wikipedia is unable to resolve the search term
             error_message = "The search term is ambiguous. Please provide more specific input."
@@ -68,7 +60,7 @@ def index():
             error_message = "An error occurred while fetching information from Wikipedia."
             return render_template('index.html', error_message=error_message)
 
-    return render_template('index.html')
+    return render_template('index.html',message=message, response=response)
 
 # audio processing
 def process_audio():
@@ -108,7 +100,7 @@ def generate_frames():
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-#@login_required
+@login_required
 @app.route('/face', methods=['GET', 'POST'])
 def face():
     if request.method == 'POST':
@@ -141,8 +133,8 @@ def video_feed():
 @login_required
 @app.route('/voice', methods=['GET', 'POST'])
 def speech():
-    action = " "
-    information = ' '
+    Message = " "
+    information = " "
     
     if request.method == 'POST':
         action = process_audio()
@@ -156,66 +148,36 @@ def speech():
                 song = action.replace("play me", "")
                 information = "Playing " + song
                 pywhatkit.playonyt(song)
-                
 
             elif "time" in action.lower():
                 current_time = datetime.datetime.now().strftime("%I:%M %p")
                 information  = "The current time is " + current_time
-                  # Your code for adding a new record to the database
-                Content= ChatPost(content_me=action, content_ai=information, user_id=current_user.get_id())
-                db.session.add(Content)
-                db.session.commit()  # Commit the changes to the database
-                return render_template('speech.html', action=action, information=information)  # Pass 'action' variable to the template
-
-            elif 'how' in action.lower():
-                description = action.replace("how", "")
-                information = wikipedia.summary(description, 2)
-                  # Your code for adding a new record to the database
-                Content= ChatPost(content_me=action, content_ai=information, user_id=current_user.get_id())
-                db.session.add(Content)
-                db.session.commit()  # Commit the changes to the database
-                return render_template('speech.html', action=action, information=information)  # Pass 'action' variable to the template
-
-
-            elif 'what' in action.lower():
-                description = action.replace("what", "")
-                information = wikipedia.summary(description, 2)
-                  # Your code for adding a new record to the database
-                Content= ChatPost(content_me=action, content_ai=information, user_id=current_user.get_id())
-                db.session.add(Content)
-                db.session.commit()  # Commit the changes to the database
-                return render_template('speech.html', action=action, information=information)  # Pass 'action' variable to the template
-
-
-            elif 'who' in action.lower():
-                description = action.replace("what", "")
-                information = wikipedia.summary(description, 2)
-                  # Your code for adding a new record to the database
-                Content= ChatPost(content_me=action, content_ai=information, user_id=current_user.get_id())
-                db.session.add(Content)
-                db.session.commit()  # Commit the changes to the database
-                return render_template('speech.html', action=action, information=information)  # Pass 'action' variable to the template
+                Message = action
+                if current_user.is_authenticated:
+                    if hasattr(current_user, 'get_id') and callable(getattr(current_user, 'get_id')):
+                        user_id = current_user.get_id()
+                    Content= ChatPost(content_me= Message, content_ai=information, user_id=user_id)
+                    db.session.add(Content)
+                    db.session.commit() 
+                pass
 
             elif '' in action.lower():
                 description = action.replace("", "")
                 information = wikipedia.summary(description, 2)
-                  # Your code for adding a new record to the database
-                Content= ChatPost(content_me=action, content_ai=information, user_id=current_user.get_id())
-                db.session.add(Content)
-                db.session.commit()  # Commit the changes to the database
-                return render_template('speech.html', action=action, information=information)  # Pass 'action' variable to the template
+                Message = action
+                if current_user.is_authenticated:
+                    if hasattr(current_user, 'get_id') and callable(getattr(current_user, 'get_id')):
+                        user_id = current_user.get_id()
+                    Content= ChatPost(content_me= Message, content_ai=information, user_id=user_id)
+                    db.session.add(Content)
+                    db.session.commit() 
+                pass
             else:
                 information = 'Can you say that again?'
-
-          
-        
         else:
             information = "Hello there, I couldn't understand what you said. Please try again."
-
-
        
-    return render_template('speech.html', action=action, information=information)  # Pass 'action' variable to the template
-
+    return render_template('speech.html', action=Message, information=information)  # Pass 'action' variable to the template
 
 @app.route('/about')
 def about():
@@ -257,7 +219,6 @@ def account():
     
     return render_template('account.html', username = user.username, email = user.email)
 
-
 @login_required
 @app.route('/setting')
 def setting():
@@ -268,7 +229,6 @@ def setting():
 def logout():
     logout_user()
     return render_template('logout.html')
-
 
 @login_required
 @app.route('/deletearchive', methods=['GET', 'POST'])
