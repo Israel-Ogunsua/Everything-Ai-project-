@@ -123,25 +123,29 @@
   </header>
   <script>
     function switchToVersion(version) {
-        if (version === 1) {
-            document.getElementById('version1Links').style.display = 'block';
-            document.getElementById('version2Links').style.display = 'none';
-            document.getElementById('version3Links').style.display = 'none';
-        } else if (version === 2) {
-            document.getElementById('version1Links').style.display = 'none';
-            document.getElementById('version2Links').style.display = 'block';
-            document.getElementById('version3Links').style.display = 'none';
-        } else if (version === 3) {
-            document.getElementById('version1Links').style.display = 'none';
-            document.getElementById('version2Links').style.display = 'none';
-            document.getElementById('version3Links').style.display = 'block';
-        }
-    }
-  </script>
-    
-    
+        const versions = [1, 2, 3];
 
-    
+        versions.forEach(v => {
+            const links = document.getElementById(`version${v}Links`);
+            if (v === version) {
+                links.style.display = 'block';
+            } else {
+                links.style.display = 'none';
+            }
+        });
+
+        localStorage.setItem('currentVersion', version);
+    }
+
+    // Set the default version to 1 or retrieve from localStorage
+    window.onload = function() {
+        const storedVersion = localStorage.getItem('currentVersion');
+        const defaultVersion = storedVersion ? parseInt(storedVersion) : 1;
+        switchToVersion(defaultVersion);
+    };
+</script>
+
+
 
     <main role="main" class="container">
     <div class="row">
@@ -285,8 +289,6 @@
         </div>
     </div>
     </main>
-
-  
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
