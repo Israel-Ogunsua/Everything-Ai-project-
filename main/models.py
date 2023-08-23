@@ -23,13 +23,22 @@ class ChatPost(db.Model,  UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60), default="New Chat", nullable=False)
     time_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    content_me = db.Column(db.Text, nullable=False)  # Fixed column name
-    content_ai = db.Column(db.Text, nullable=False)  # Fixed column name
+    content_me = db.Column(db.String(120), nullable=False)  # Fixed column name
+    content_ai = db.Column(db.String(200), nullable=False)  # Fixed column name
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __init__(self, content_me, content_ai, user_id):
+        self.content_me = content_me
+        self.content_ai = content_ai
+        self.user_id = user_id
 
     def __repr__(self):
         return f"ChatPost('{self.title}', {self.content_me}', '{self.content_ai}', '{self.user_id}')"
-    
-    def __init__(self, user_id):
-        self.id = user_id
-       
+
+class Image(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(255), unique=True, nullable=False)
+    data = db.Column(db.LargeBinary, nullable=False)
+
+    def __repr__(self):
+        return f"Image('{self.filename}')"

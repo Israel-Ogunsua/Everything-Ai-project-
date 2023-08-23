@@ -3,6 +3,7 @@ import cv2
 import os
 import glob
 import numpy as np
+from app import db 
 
 class ConstructFace:
     def __init__(self):
@@ -12,32 +13,33 @@ class ConstructFace:
         # Resize frame for a faster speed
         self.frame_resizing = 0.25
 
-    def load_encoding_images(self, images_path):
-        """"
-        Load encoding images from path
-        :param images_path:
-        :return:
+    def load_encoding_images(self, Image):
         """
-        # Load Images
-        images_path = glob.glob(os.path.join(images_path, "*.*"))
+        Load encoding images from a Flask database
+        :param db: Your Flask SQLAlchemy database instance
+        :return: None
+        """
+        images = db.session.query(Image).all()
 
-        print("{} encoding images found.".format(len(images_path)))
+        print("{} encoding images found in the database.".format(len(images)))
 
-        # Store image encoding and names
-        for img_path in images_path:
-            img = cv2.imread(img_path)
-            rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+       # Load and process one image at a time
+        for image in images:
+            image_data = np.frombuffer(image.data, np.uint8)
+            cv2_image = cv2.imdecode(image_data, cv2.IMREAD_COLOR)
 
-            # Get the filename only from the initial file path.
-            basename = os.path.basename(img_path)
-            (filename, ext) = os.path.splitext(basename)
-            # Get encoding
-            img_encoding = face_recognition.face_encodings(rgb_img)[0]
+            if cv2_image is not None:  # Check if image was loaded correctly
+                img_encoding = face_recognition.face_encodings(cv2_image)
+                if img_encoding:
+                    self.known_face_encodings.append(img_encoding[0])  # Take the first encoding
+                    self.known_face_names.append(image.filename)
+                else:
+                    print("No face detected in image:", image.filename)
+            else:
+                print("Error loading image:", image.filename)
 
-            # Store file name and file encoding
-            self.known_face_encodings.append(img_encoding)
-            self.known_face_names.append(filename)
-        print("Encoding images loaded")
+
+        print("Encoding images loaded from the database")
 
     def detect_known_faces(self, frame):
         small_frame = cv2.resize(frame, (0, 0), fx=self.frame_resizing, fy=self.frame_resizing)
@@ -69,3 +71,4 @@ class ConstructFace:
         face_locations = np.array(face_locations)
         face_locations = face_locations / self.frame_resizing
         return face_locations.astype(int), face_names
+

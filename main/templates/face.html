@@ -19,26 +19,28 @@
     <br>
 
     <h2>Image Submission</h2>
-    <form  method="post" enctype="multipart/form-data">
-        <label for="image">Upload an image:</label>
-        <input type="file" name="image" id="image" accept="image/*" required>
-        <br>
-        <label for="image">Add details :</label>
-        <input type="tect " placeholder="Name Suggested ">
+    <form action="/face" method="POST" enctype="multipart/form-data">
+        <label for="image">Select an image:</label>
+        <input type="file" id="image" name="file"  required><br>
         
-        <input type="submit" value="Submit"  class="btn btn-info" >
+        <label for="filename">Add details :</label>
+        <input type="text" id="filename" name="filename"><br>
         
+        <input type="submit" value="Upload"  class="btn btn-info" >
     </form>
     <br>
 
     <div class="row">
         <div class="col-lg-8 offset-lg-2">
-            <img id="video_feed" src="{{ url_for('video_feed') }}" width="70%" height="70%">
+            <img id="video_feed" src="{{ url_for('video_feed') }}" width="100%" height="120%">
         </div>
     </div>
 
     <br>
-
+    <br>
+    <br>
+    <br>
+    <br>
     <div>
         <table>
         <tr>
@@ -46,6 +48,17 @@
             <th> <i class="fa fa-address-book-o" aria-hidden="true"></i> In record </th>
             <th> <i class="fa fa-info-circle" aria-hidden="true"></i> Name</th>
             <th> <i class="fa fa-level-up" aria-hidden="true"></i> Level </th>
+            {% for i in facing %}
+            <tr>
+                    
+                <td> Person </td>
+                <td> in record </td> 
+                <td> {{i}}</td>
+                <td> yeah</td> 
+            </tr>
+            {% endfor %}
+
+
             
     </table>
     </div>

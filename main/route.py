@@ -1,7 +1,7 @@
 from app import app, bcrypt, db
 from flask import render_template,url_for,request,flash, redirect,  jsonify, Response
 from flask_login import login_user, login_required,current_user, logout_user
-from  models import  User, ChatPost
+from  models import  User, ChatPost, Image
 # for  voice acitvation 
 import speech_recognition as sr
 import pywhatkit
@@ -11,12 +11,23 @@ import pyttsx3
 import cv2
 from ConstructFace import ConstructFace
 import numpy as np
+import os
 
 sfr = ConstructFace()
-sfr.load_encoding_images("images/")
+sfr.load_encoding_images(Image)
 # Load Camera
 cap = cv2.VideoCapture(0) 
+facing = []
 
+def savedate(message, response, user_id):
+    print("process 1")
+    print(type(response))
+
+    content_searched = ChatPost( content_ai=response, user_id=user_id)
+    db.session.add(content_searched)
+    db.session.commit()
+           
+  
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/home', methods=['GET', 'POST'])
 def index(): 
@@ -25,25 +36,21 @@ def index():
         if not message:
             error_message = "Please enter a message."
             return render_template('index.html', error_message=error_message)
-
+        
+        print("gibe")
         try:
-            # Ensure the input is not empty before proceeding with Wikipedia search
             description = message.strip()
             response = wikipedia.summary(description, sentences=2)
-
+            print(response)
             if current_user.is_authenticated:
-                print(response)
-                
-                # Check if the user is authenticated before accessing attributes/methods
                 if hasattr(current_user, 'get_id') and callable(getattr(current_user, 'get_id')):
                     user_id = current_user.get_id()
+                    print("seen")
                     
-                    # Create a new ChatPost object
-                    content_searched = ChatPost(content_me=message, content_ai=response, user_id=user_id)
-                    db.session.add(content_searched)
-                    db.session.commit()
-
+                savedate(message, response, user_id)
+                print("yeah")
             return render_template('index.html', message=message, response=response)
+    
         except wikipedia.exceptions.DisambiguationError as e:
             # Handle the case when Wikipedia is unable to resolve the search term
             error_message = "The search term is ambiguous. Please provide more specific input."
@@ -84,11 +91,12 @@ def process_audio():
         return None
 
 def generate_frames():
-    while True:
+  while True:
         ret, frame = cap.read()
 
         # Detect Faces
         face_locations, face_names = sfr.detect_known_faces(frame)
+        facing.append(face_names)
         for face_loc, name in zip(face_locations, face_names):
             y1, x2, y2, x1 = face_loc[0], face_loc[1], face_loc[2], face_loc[3]
 
@@ -100,10 +108,31 @@ def generate_frames():
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-@login_required
-@app.route('/face')
+#@login_required
+@app.route('/face', methods=['GET', 'POST'])
 def face():
-    return render_template('face.html')
+    if request.method == 'POST':
+        if 'file' not in request.files:
+             return 'No file part', 400
+
+        file = request.files['file']
+        if file.filename == '':
+            return 'No selected file', 400
+
+        image_data = file.read()
+        image_filename = request.form['filename']  # Get the filename from the form input
+        image_record = Image(filename=image_filename, data=image_data)
+        db.session.add(image_record)
+        db.session.commit()
+
+    faceUpdate = []
+
+    for i in facing:
+        if i == "Unknown" or i == "":
+            pass 
+        else:
+            faceUpdate.append(i)
+    return render_template('face.html', facing = faceUpdate)
 
 @app.route('/video_feed')
 def video_feed():
