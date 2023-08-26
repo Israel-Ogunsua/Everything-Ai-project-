@@ -5,14 +5,44 @@
 
 {% block content%}
 <div class="container">
-    <h2>Facial Recoginition  </h2>
+    <h1>Facial Recognition Setup Instructions </h1>
     <p>Click on the button to toggle between showing and hiding content.</p>
     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Learn How  to use </button>
     <div id="demo" class="collapse">
       <br>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      <div class="container">
+        <p>Welcome to the facial recognition setup process! This cutting-edge feature enables our AI machine detector to identify and recognize your face for personalized interactions. To ensure a seamless experience, please follow the steps outlined below:</p>
+        
+        <h2>1. Automatic Face Capture:</h2>
+        <p>Our system will automatically capture your face using advanced AI technology. This process is effortless on your part and requires no manual intervention.</p>
+        
+        <h2>2. Face Recognition Status:</h2>
+        <p>Upon capturing your face, the AI will determine if your face is recognized or unknown to the system. An unknown status implies that your face has not yet been registered in our database.</p>
+
+        <h2>3. Capturing Your Face:</h2>
+        <p>To facilitate accurate recognition, please follow these steps:</p>
+        <ol>
+            <li>Locate the image collector below.</li>
+            <li>Position yourself in a well-lit environment with your face clearly visible.</li>
+            <li>Ensure your face is pointing directly towards the camera and your forehead is within the frame.</li>
+            <li>This step is crucial: Capture your face structure by taking a photo.</li>
+        </ol>
+
+        <h2>4. File Naming Convention:</h2>
+        <p>For seamless recognition, it's vital that the saved image file carries the same name as the one you'd like to be addressed by. If you have more than one recognized face, you can also use both names to refer to you.</p>
+
+        <h2>5. Adding Additional Details:</h2>
+        <p>To enhance the recognition process, you have the option to provide additional information such as your name or nickname. This detail will be associated with your facial profile.</p>
+
+        <h3>Tips for Successful Face Recognition:</h3>
+        <ul>
+            <li>Ensure proper lighting when capturing your face.</li>
+            <li>Maintain a neutral expression for accurate identification.</li>
+            <li>Center your face within the frame and keep your forehead visible.</li>
+        </ul>
+
+        <p>Thank you for participating in our facial recognition setup. Your commitment to this process will ensure a seamless and personalized experience with our AI system. If you encounter any issues or require assistance, feel free to reach out to our support team. We're excited to have you on board!</p>
+    </div>
     </div>
 
     <br>
@@ -36,53 +66,13 @@
         </div>
     </div>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div>
-        <table>
-        <tr>
-            <th> <i class="fa fa-user" aria-hidden="true"></i> Person </th>
-            <th> <i class="fa fa-address-book-o" aria-hidden="true"></i> In record </th>
-            <th> <i class="fa fa-info-circle" aria-hidden="true"></i> Name</th>
-            <th> <i class="fa fa-level-up" aria-hidden="true"></i> Level </th>
-            {% for i in facing %}
-            <tr>
-                    
-                <td> Person </td>
-                <td> in record </td> 
-                <td> {{i}}</td>
-                <td> yeah</td> 
-            </tr>
-            {% endfor %}
-
-
-            
-    </table>
-    </div>
 </div>
 <br>
 <br>
-
-<style>
-    table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-    }
-
-    td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-    }
-
-    tr:nth-child(even) {
-    background-color: #dddddd;
-    }
-</style>
+<br>
+<br>
+<br>
+<br>
 
     
 {% endblock %}

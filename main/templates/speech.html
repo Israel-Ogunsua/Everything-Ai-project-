@@ -11,9 +11,22 @@
     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Learn How  to use </button>
     <div id="demo" class="collapse">
       <br>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-      quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      <h5>
+        Locate the designated interface marked as the "Ask AI Button" and initiate communication with the AI while the webpage is actively operational and responsive.
+      </h5>
+      <br>
+      <p>
+        For users utilizing Version 1: Utilize the power of voice interaction to engage with the AI. You can vocalize your queries, commands, or discussions, and the AI will process and respond to your spoken input.
+      </p>
+      <br>
+      <p>
+        For users engaging with Version 2: Engage in vocal conversations with the AI while also benefiting from an integrated search history feature that caters to your individual preferences. This search history is meticulously curated and preserved for your personal reference. It serves as a repository of your past interactions, aiding in the augmentation of future results. By drawing upon your previous searches, the AI can enhance the accuracy and relevance of the responses it generates.
+      </p>
+     
+      <br>
+      <p>
+        For users engaging with Version 2: Engage in vocal conversations with the AI while also benefiting from an integrated search history feature that caters to your individual preferences. This search history is meticulously curated and preserved for your personal reference. It serves as a repository of your past interactions, aiding in the augmentation of future results. By drawing upon your previous searches, the AI can enhance the accuracy and relevance of the responses it generates.
+      </p>
     </div>
   </div>
   <br>
@@ -25,7 +38,7 @@
                 <!-- Button element as the mic icon -->
                 <button type="submit" class="mic-button btn btn-success" >
                     <!-- Bootstrap mic icon -->
-                    click to ask Ai <i class="bi bi-mic"></i>
+                    Ask Ai <i class="bi bi-mic"></i>
                 </button>
             </form>
         </div>
@@ -34,13 +47,13 @@
     <br>
     {% if action %}
         <div class="disi">
-            <h5 style="font-weight: bold;">You </h5>
+            <h5 style="font-weight: bold;">You</h5>
             <p >{{ action }}</p>
         </div>
 
         {% if information %}
             <div class="response">
-                <h5 style=" font-weight: bold;">Everything Ai </h5>
+                <h5 style=" font-weight: bold;">Ai </h5>
                 <p>{{information}}</p>
             </div>
         
@@ -63,7 +76,7 @@
 
 
      .disi{
-        background: #e0f6d5;
+        background: whitesmoke;
         padding: 10px 20px;
         border: 1px solid #dddddd;
         border-radius: 15px;
@@ -71,7 +84,7 @@
     }
 
     .response{
-        background: #a3b5f0;
+        background: rgba(252, 247, 247, 0.929);
         padding: 10px 20px;
         border: 1px solid #dddddd;
         border-radius: 15px;
