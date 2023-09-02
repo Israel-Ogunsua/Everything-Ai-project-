@@ -4,7 +4,6 @@ from flask_login import login_user, login_required,current_user, logout_user
 from  models import  User, ChatPost, Image
 # for  voice acitvation 
 import speech_recognition as sr
-import pywhatkit
 import datetime
 import wikipedia
 import pyttsx3
@@ -12,12 +11,31 @@ import cv2
 from ConstructFace import ConstructFace
 import numpy as np
 import os
-
+import pywhatkit
+from flask import Flask
 sfr = ConstructFace()
 sfr.load_encoding_images(Image)
 # Load Camera
-cap = cv2.VideoCapture(0) 
-facing = []
+cap = cv2.VideoCapture(0)
+
+
+
+def test_camera(index):
+    cap = cv2.VideoCapture(index)
+    if cap.isOpened():
+        print(f"Camera {index} is working")
+        cap.release()
+        return True
+    else:
+        print(f"Camera {index} is not working")
+        return False
+
+def find_working_camera():
+    for index in range(0, 10):  # You can adjust the range based on the number of cameras you have
+        if test_camera(index):
+            return index
+    return None
+
 
             
 @app.route('/', methods=['GET', 'POST'])
@@ -83,12 +101,21 @@ def process_audio():
         return None
 
 def generate_frames():
-  while True:
+    working_camera_index = find_working_camera()
+
+    if working_camera_index is not None:
+        print(f"Working camera found at index: {working_camera_index}")
+    else:
+        print("No working camera found")
+
+
+
+    while True:
         ret, frame = cap.read()
 
         # Detect Faces
         face_locations, face_names = sfr.detect_known_faces(frame)
-        facing.append(face_names)
+        
         for face_loc, name in zip(face_locations, face_names):
             y1, x2, y2, x1 = face_loc[0], face_loc[1], face_loc[2], face_loc[3]
 
@@ -117,14 +144,7 @@ def face():
         db.session.add(image_record)
         db.session.commit()
 
-    faceUpdate = []
-
-    for i in facing:
-        if i == "Unknown" or i == "":
-            pass 
-        else:
-            faceUpdate.append(i)
-    return render_template('face.html', facing = faceUpdate)
+    return render_template('face.html')
 
 @app.route('/video_feed')
 def video_feed():
